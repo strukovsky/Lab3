@@ -1,13 +1,24 @@
 package com.strukovsky.q;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Properties;
+
 class WashingMachine implements Serializable
 {
+	private static final String keyCapacity = "capacity";
+	private static final Properties properties = new Properties();
+	private static final ConfigLoader loader = new ConfigLoader(properties);
+
 	private String washingPowder;
 	private String conditioner;
 	private Colour clothesColour;
-	private int temperature;
-	
+	private final int temperature;
+	private static final int capacity = Integer.parseInt(properties.getProperty(keyCapacity));
+
+	public int getCapacity() {
+		return capacity;
+	}
+
 	public String getWashingPowder()
 	{
 		return washingPowder;
@@ -48,16 +59,18 @@ class WashingMachine implements Serializable
 		this.conditioner = conditioner;
 		this.clothesColour = clothesColour;
 		this.temperature = temperature;
-		
+
 		result = new ArrayList<>();
 	}
 	
 	private ArrayList<Clothes> result;
 	public void load(Clothes c) throws ClothersMismatchException
 	{
+		if(result.size() + 1 >= capacity)
+			throw new ClothersMismatchException("WashingMachine is full!");
 		if(c.getTemperatureWash() != temperature)
 		{
-			throw new ClothersMismatchException("Cloth and washing machine has different temperature:\nIn machine: " + temperature + "\nPresent: " + c.getTemperatureWash());
+			throw new ClothersMismatchException("Cloth and washing machine have different temperature:\nIn machine: " + temperature + "\nPresent: " + c.getTemperatureWash());
 		}
 		
 		if(result.isEmpty())
@@ -78,15 +91,33 @@ class WashingMachine implements Serializable
 			{
 				result.add(first);
 			}
-			throw new ClothersMismatchException("Clothers are different\nIn machine: " + first + "Present: " + c);
+			else
+			throw new ClothersMismatchException("Clothes are different\nIn machine: " + first + "Present: " + c);
 		}
 	
 	}
 	
 	public String toString()
 	{
-		return "Washing powder: " + washingPowder + " | conditioner: " + conditioner +
-		" | clothes colour " + clothesColour + " | temperature of clothes " + temperature + "\n"; 
+		StringBuilder builder = new StringBuilder("Washing powder: ");
+		builder.append(washingPowder);
+		builder.append(" | conditioner: ");
+		builder.append(conditioner);
+		builder.append(" | clothes colour ");
+		builder.append(clothesColour);
+		builder.append( " | temperature of clothes ");
+		builder.append(temperature);
+		builder.append("\n");
+		builder.append("Clothes inside:\n");
+		for(Clothes clothes: result)
+		{
+			if(clothes instanceof ColouredClothes)
+			builder.append((ColouredClothes) clothes);
+			else
+				builder.append(clothes);
+		}
+		builder.append("\n");
+		return builder.toString();
 	}
 	
 }

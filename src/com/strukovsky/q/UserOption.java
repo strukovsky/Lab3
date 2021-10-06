@@ -1,5 +1,5 @@
 package com.strukovsky.q;
 
 public enum UserOption {
-    LoadNew, LookAtAll, Unknown, EditExisting
+    LoadNew, LookAtAll, Unknown, EditExisting, DeleteExisting, Exit
 }

@@ -1,5 +1,5 @@
 package com.strukovsky.q;
-import java.util.Scanner; 
+import java.util.Scanner;
 
 class View
 {
@@ -69,11 +69,16 @@ class View
 				return UserOption.LookAtAll;
 			case "edit":
 				return UserOption.EditExisting;
+			case "delete":
+				return UserOption.DeleteExisting;
+			case "exit":
+				return UserOption.Exit;
 		}
 		return UserOption.Unknown;
 	}
 	
 	public ClothesType readTypeOfClothes() {
+		System.out.println("Enter type of clothes Clothes or ColouredClothes");
 		String result = scanner.next();
 		switch (result) {
 			case "Clothes":
@@ -104,9 +109,21 @@ class View
 		conditioner = scanner.next();
 		Colour clothesColour = readColour();
 		int temperature;
+		System.out.println("Now enter data for clothes inside");
 		System.out.println("Enter temperature of washing");
 		temperature = scanner.nextInt();
 		return new WashingMachine( washingPowder,  conditioner,  clothesColour, temperature);
 
+	}
+
+	public boolean readFromUserIfContinue()
+	{
+		String s = scanner.next();
+		return s.equals("Y") || s.equals("y");
+	}
+
+	public int readId() {
+		System.out.println("Enter ID (from 0 upto N-1) of Washing Machine");
+		return scanner.nextInt();
 	}
 }
